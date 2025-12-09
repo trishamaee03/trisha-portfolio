@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Portfolio final project</title>
+
+    <style>
+      :root {
+        --bg: #0d0d0d;
+        --fg: #f5f5f0;
+        --muted: #6b6b6b;
+        --accent: #9966ff;
+        --accent2: #00ffcc;
+        --accent3: #ff006e;
+        --card: #1a1a1a;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        min-height: 100vh;
+        font-family: "Space Grotesk", system-ui, -apple-system, "Segoe UI",
+          Roboto, "Helvetica Neue", Arial;
+        background: var(--bg);
+        color: var(--fg);
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1;
+        opacity: 0.03;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      }
+
+      /* Utility "brutal" shadows */
+      .text-shadow-brutal {
+        text-shadow: 4px 4px 0 var(--accent);
+      }
+      .box-shadow-brutal {
+        box-shadow: 8px 8px 0 var(--accent);
+      }
+      .box-shadow-brutal-hover {
+        box-shadow: 12px 12px 0 var(--accent);
+      }
+
+      /* NAV */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 60;
+        display: block;
+        transition: all 0.25s;
+        padding: 18px 24px;
+      }
+      .nav-inner {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        z-index: 70;
+        position: relative;
+      }
+      .brand {
+        font-weight: 900;
+        font-size: 20px;
+        color: var(--accent);
+        cursor: pointer;
+        letter-spacing: 1px;
+      }
+      .nav-links {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+      }
+      .nav-links button {
+        background: transparent;
+        border: none;
+        color: var(--fg);
+        text-transform: uppercase;
+        font-weight: 700;
+        cursor: pointer;
+        position: relative;
+        padding: 6px;
+      }
+      .nav-links button:hover {
+        color: var(--accent);
+      }
+      .nav-links button::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -6px;
+        width: 0;
+        height: 2px;
+        background: var(--accent);
+        transition: width 0.2s;
+      }
+      .nav-links button:hover::after {
+        width: 100%;
+      }
+
+      .nav-bg {
+        background: transparent;
+      }
+      .nav-bg.scrolled {
+        background: rgba(13, 13, 13, 0.95);
+        backdrop-filter: blur(6px);
+        border-bottom: 4px solid var(--accent);
+      }
+
+      /* mobile */
+      .mobile-btn {
+        display: none;
+        background: transparent;
+        border: 2px solid var(--accent);
+        color: var(--accent);
+        padding: 6px;
+        border-radius: 6px;
+      }
+      .mobile-menu {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: var(--bg);
+        z-index: 80;
+        padding: 28px;
+        overflow: auto;
+      }
+
+      /* HERO */
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 10;
+        padding: 48px 24px;
+      }
+      .hero-grid {
+        position: absolute;
+        inset: 0;
+        opacity: 0.08;
+        background-image: linear-gradient(var(--accent) 1px, transparent 1px),
+          linear-gradient(90deg, var(--accent) 1px, transparent 1px);
+        background-size: 50px 50px;
+      }
+
+      .hero-content {
+        max-width: 1200px;
+        text-align: center;
+        padding: 80px 24px;
+      }
+      .hero h1 {
+        font-weight: 900;
+        letter-spacing: -2px;
+        line-height: 0.9;
+        margin-bottom: 16px;
+        font-size: 6rem;
+      }
+      .hero h1 .accent {
+        color: var(--accent);
+        display: block;
+      }
+      .hero h1 .main {
+        color: var(--fg);
+        display: block;
+      }
+
+      .hero p {
+        color: var(--muted);
+        font-size: 1.25rem;
+        margin-bottom: 28px;
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .hero .cta {
+        display: flex;
+        gap: 14px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .btn-primary {
+        background: var(--accent);
+        color: #0d0d0d;
+        border: 4px solid var(--accent);
+        padding: 18px 28px;
+        text-transform: uppercase;
+        font-weight: 900;
+        font-size: 1.05rem;
+        cursor: pointer;
+        border-radius: 6px;
+        transition: transform 0.15s, box-shadow 0.15s;
+        box-shadow: 8px 8px 0 var(--accent);
+      }
+      .btn-primary:hover {
+        transform: translate(4px, 4px);
+        box-shadow: 12px 12px 0 var(--accent);
+      }
+      .btn-ghost {
+        background: transparent;
+        color: var(--fg);
+        border: 4px solid var(--fg);
+        padding: 16px 26px;
+        text-transform: uppercase;
+        font-weight: 900;
+        border-radius: 6px;
+      }
+      .arrow-down {
+        position: absolute;
+        bottom: 28px;
+        left: 50%;
+        transform: translateX(-50%);
+        animation: bounce 2s infinite;
+      }
+      @keyframes bounce {
+        0%,
+        100% {
+          transform: translate(-50%, 0);
+        }
+        50% {
+          transform: translate(-50%, 10px);
+        }
+      }
+
+      /* sections common */
+      section {
+        padding: 80px 24px;
+        position: relative;
+        z-index: 10;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      /* ABOUT Section Specific Styles */
+      .about-content {
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+        align-items: center;
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+
+      @media (min-width: 768px) {
+        .about-content {
+          flex-direction: row;
+          text-align: left;
+        }
+      }
+
+      .about-text {
+        flex: 3;
+      }
+
+      .about-image-container {
+        flex: 2;
+        text-align: center;
+      }
+
+      .about-image {
+        width: 250px;
+        height: 250px;
+        object-fit: cover;
+        border-radius: 999px;
+        border: 4px solid var(--accent);
+        box-shadow: 8px 8px 0 var(--fg);
+        transition: transform 0.3s;
+      }
+
+      .about-image:hover {
+        transform: scale(1.05) rotate(1deg);
+      }
+      /* END ABOUT Section Specific Styles */
+
+      /* WORK grid */
+      .work-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 24px;
+      }
+
+      .project {
+        background: var(--card);
+        border: 4px solid transparent;
+        overflow: hidden;
+        transition: transform 0.2s, box-shadow 0.2s;
+        cursor: pointer;
+      }
+      .project:hover {
+        transform: translate(8px, 8px);
+      }
+      .project .media {
+        aspect-ratio: 16/9;
+        overflow: hidden;
+        background: #111;
+      }
+      @media (min-width: 768px) {
+        .project .media {
+          aspect-ratio: 16/9;
+        }
+      }
+
+      .project img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.5s;
+      }
+      .project:hover img {
+        transform: scale(1.08);
+      }
+      .project .body {
+        padding: 18px;
+      }
+      .project h3 {
+        text-transform: uppercase;
+        margin-bottom: 10px;
+        font-size: 1.4rem;
+      }
+      .project p {
+        color: var(--muted);
+        margin-bottom: 10px;
+      }
+      .tags {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .tag {
+        border: 2px solid #6b6b6b;
+        color: #6b6b6b;
+        padding: 6px 8px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.8rem;
+        border-radius: 6px;
+      }
+
+      /* PROJECT modal (General) */
+      .modal-wrap {
+        position: fixed;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 120;
+        padding: 24px;
+      }
+
+      /* IFRAME MODAL STYLES */
+      #iframeModal .modal {
+        max-width: 900px;
+        padding: 0;
+        overflow: hidden;
+        height: 90vh;
+      }
+      #iframeModal .modal-content {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+      }
+      #iframeModal .modal-header {
+        background: var(--fg);
+        color: var(--bg);
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 4px solid var(--accent);
+      }
+      #iframeModal h2 {
+        margin: 0;
+        font-size: 1.5rem;
+      }
+      #iframeModal .close {
+        z-index: 121;
+        background: transparent;
+        border: none;
+        color: var(--bg);
+        cursor: pointer;
+        font-size: 1.5rem;
+        font-weight: 900;
+        padding: 0;
+        line-height: 1;
+      }
+      #iframeModal .modal-iframe {
+        flex-grow: 1;
+        width: 100%;
+        border: none;
+        background: white;
+        display: block;
+      }
+
+      /* CONTACT */
+      .contact-cta {
+        text-align: center;
+        margin-bottom: 26px;
+      }
+      .contact-email {
+        display: inline-flex;
+        gap: 12px;
+        align-items: center;
+        padding: 18px 28px;
+        background: var(--accent);
+        color: #0d0d0d;
+        text-decoration: none;
+        font-weight: 900;
+        border: 4px solid var(--accent);
+        box-shadow: 8px 8px 0 var(--accent);
+      }
+      .socials {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 26px;
+      }
+      .social {
+        padding: 14px;
+        border: 4px solid transparent;
+        transition: transform 0.15s;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+      .social svg {
+        display: block;
+      }
+      .social:hover {
+        transform: translate(6px, 6px);
+      }
+      /* --- MODIFIED BACK TO TOP STYLE --- */
+      .back-top {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        color: #0d0d0d;
+        background: var(--accent);
+        padding: 8px 16px;
+        border-radius: 4px;
+        font-family: "JetBrains Mono", monospace;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        border-top: none;
+        margin-top: 18px;
+        transition: opacity 0.2s;
+        cursor: pointer;
+      }
+      .back-top:hover {
+        opacity: 0.9;
+      }
+      .back-top svg {
+        stroke: #0d0d0d;
+      }
+      /* --- END MODIFIED STYLE --- */
+
+      footer p {
+        color: var(--muted);
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.9rem;
+        text-align: center;
+        margin-top: 18px;
+      }
+
+      /* responsive */
+      @media (max-width: 768px) {
+        .hero h1 {
+          font-size: 3.6rem;
+        }
+        .nav-links {
+          display: none;
+        }
+        .mobile-btn {
+          display: inline-block;
+        }
+        .mobile-menu {
+          display: none;
+        }
+        .modal {
+          padding: 16px;
+        }
+        .left,
+        .right {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav id="nav" class="nav-bg">
+      <div class="nav-inner container">
+        <div class="brand" onclick="scrollTo('#home')">Portfolio</div>
+
+        <div class="nav-links" id="navlinks">
+          <button onclick="scrollTo('#about')">About</button>
+          <button onclick="scrollTo('#skills')">Skills</button>
+          <button onclick="scrollTo('#work')">Work</button>
+          <button onclick="scrollTo('#contact')">Contact</button>
+        </div>
+
+        <button class="mobile-btn" id="mobileBtn">Menu</button>
+      </div>
+    </nav>
+
+    <div id="mobileMenu" class="mobile-menu" style="display: none">
+      <div
+        style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        "
+      >
+        <div style="font-weight: 900; color: var(--accent); font-size: 20px">
+          Menu
+        </div>
+        <button
+          onclick="toggleMobileMenu()"
+          style="
+            padding: 8px 12px;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+            background: transparent;
+          "
+        >
+          Close
+        </button>
+      </div>
+      <div
+        style="
+          margin-top: 40px;
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        "
+      >
+        <button onclick="scrollTo('#about'); toggleMobileMenu()">About</button>
+        <button onclick="scrollTo('#skills'); toggleMobileMenu()">
+          Skills
+        </button>
+        <button onclick="scrollTo('#work'); toggleMobileMenu()">Work</button>
+        <button onclick="scrollTo('#contact'); toggleMobileMenu()">
+          Contact
+        </button>
+      </div>
+    </div>
+
+    <section class="hero" id="home">
+      <div class="hero-grid" aria-hidden></div>
+
+      <div class="hero-content container">
+        <h1>
+          <span class="accent">Hi</span>
+          <span class="main">I'm Trisha </span>
+        </h1>
+
+        <p>
+          I am an IT student currently building my foundations in programming.
+        </p>
+
+        <div class="cta">
+          <button class="btn-primary" onclick="scrollTo('#work')">
+            View My Work
+          </button>
+          <button class="btn-ghost" onclick="scrollTo('#contact')">
+            Get In Touch
+          </button>
+        </div>
+      </div>
+
+      <div class="arrow-down" aria-hidden>
+        <svg
+          width="28"
+          height="28"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+        >
+          <path d="M12 5v14M5 12l7 7 7-7" />
+        </svg>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="container">
+        <h2 style="font-size: 2.5rem; text-align: center; margin-bottom: 40px">
+          About
+        </h2>
+
+        <div class="about-content">
+          <div class="about-image-container">
+            <img
+              src="https://uploads.onecompiler.io/4472kksa7/4472madfj/cal.jpg"
+              alt="Trisha's Portrait"
+              class="about-image"
+            />
+          </div>
+          <div class="about-text">
+            <p style="color: var(--muted); text-align: left; margin-top: 15px">
+              I have basic knowledge of Java, C++, C#, and HTML, and I’m
+              continuously practicing through projects and coursework. While I’m
+              not yet very strong at programming, I am dedicated to improving
+              and learning step by step. I enjoy tackling new challenges,
+              exploring different technologies, and finding creative solutions
+              to problems. I am eager to gain more experience, learn from
+              mistakes, and gradually develop my skills into proficiency. I
+              believe that persistence, curiosity, and consistent practice are
+              the keys to becoming a competent programmer, and I am committed to
+              growing in this field one step at a time.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills" style="background: transparent">
+      <div class="container">
+        <h2 style="font-size: 2.5rem; text-align: center; margin-bottom: 18px">
+          Skills & Languages
+        </h2>
+
+        <div
+          style="
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+          "
+        >
+          <div class="tag">Java</div>
+          <div class="tag">C++</div>
+          <div class="tag">C#</div>
+          <div class="tag">HTML & CSS</div>
+          <div class="tag">Problem Solving</div>
+          <div class="tag">Basic Algorithms</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="work">
+      <div class="container">
+        <h2 style="font-size: 2.5rem; text-align: center; margin-bottom: 22px">
+          <span style="color: var(--accent)">Featured</span>
+          <span style="color: var(--fg)">Work</span>
+        </h2>
+
+        <div class="work-grid" id="workGrid">
+          <div
+            class="project"
+            data-color="#ff006e"
+            onclick="openIframeModal('Student Registration Form', 'student-form.html')"
+          >
+            <div class="media">
+              <img
+                src="https://upload.wikimedia.org/wikipedia/en/thumb/6/6a/Philippine_Christian_University_logo.png/250px-Philippine_Christian_University_logo.png"
+                alt="Student Registration Image"
+              />
+            </div>
+            <div class="body">
+              <h3 style="color: #ff006e">Student Registration Form</h3>
+              <div class="tags">
+                <span class="tag">HTML</span><span class="tag">CSS</span
+                ><span class="tag">Form</span>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="project"
+            data-color="#00ffcc"
+            onclick="openIframeModal('Basic Multiplication Table', 'multiplication-table.html')"
+          >
+            <div class="media">
+              <img
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDLYktg4XLZmyveJ1Gbuqf9mT6jQ4JYRCiAQ&s"
+                alt="Math Table Image"
+              />
+            </div>
+            <div class="body">
+              <h3 style="color: #00ffcc">Basic Multiplication Table</h3>
+              <div class="tags">
+                <span class="tag">HTML</span><span class="tag">CSS</span
+                ><span class="tag">Table</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        id="iframeModal"
+        class="modal-wrap"
+        style="display: none"
+        onclick="closeIframeModal()"
+      >
+        <div class="modal" onclick="event.stopPropagation()">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2 id="modalIframeTitle">Project Title</h2>
+              <button class="close" onclick="closeIframeModal()">✕</button>
+            </div>
+            <iframe
+              id="modalIframe"
+              class="modal-iframe"
+              src=""
+              title="Project View"
+            ></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" style="background: var(--card); padding-bottom: 60px">
+      <div class="container">
+        <div class="contact-cta">
+          <h2 style="font-size: 3rem; margin-bottom: 8px">
+            <span style="color: var(--accent)">Let's</span>
+            <span style="color: var(--fg)">Build</span>
+          </h2>
+          <p style="color: var(--muted); max-width: 820px; margin: 0 auto 18px">
+            Got a project in mind? Let's create something extraordinary
+            together.
+          </p>
+
+          <a class="contact-email" href="mailto:hello@example.com">
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              style="display: block"
+            >
+              <path
+                d="M3 6.5v11A2.5 2.5 0 0 0 5.5 20h13A2.5 2.5 0 0 0 21 17.5v-11"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <span style="font-size: 1.25rem"
+              >trisha.enore.coi@pcu.edu.ph.com</span
+            >
+          </a>
+        </div>
+
+        <div class="socials">
+          <a
+            class="social"
+            href="https://github.com"
+            target="_blank"
+            style="
+              border-color: var(--accent);
+              box-shadow: 6px 6px 0 var(--accent);
+            "
+          >
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.49 0-.24-.01-.87-.01-1.71-2.78.6-3.37-1.34-3.37-1.34-.45-1.15-1.11-1.46-1.11-1.46-.91-.62.07-.61.07-.61 1.01.07 1.54 1.04 1.54 1.04.9 1.54 2.36 1.1 2.94.84.09-.66.35-1.1.63-1.35-2.22-.25-4.56-1.11-4.56-4.95 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0 1 12 6.8c.85.004 1.71.115 2.51.337 1.9-1.29 2.74-1.02 2.74-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.85-2.34 4.7-4.57 4.95.36.31.68.92.68 1.86 0 1.34-.01 2.42-.01 2.75 0 .27.18.59.69.49A10 10 0 0 0 22 12c0-5.52-4.48-10-10-10z"
+                fill="currentColor"
+              />
+            </svg>
+          </a>
+
+          <a
+            class="social"
+            href="https://linkedin.com"
+            target="_blank"
+            style="
+              border-color: var(--accent2);
+              box-shadow: 6px 6px 0 var(--accent2);
+            "
+          >
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M16 8a6 6 0 0 1 6 6v6h-4v-6a2 2 0 0 0-4 0v6h-4v-12h4v2"
+                stroke="currentColor"
+                stroke-width="1.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </a>
+
+          <a
+            class="social"
+            href="https://twitter.com"
+            target="_blank"
+            style="
+              border-color: var(--accent3);
+              box-shadow: 6px 6px 0 var(--accent3);
+            "
+          >
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"
+                fill="currentColor"
+              />
+            </svg>
+          </a>
+        </div>
+
+        <div style="text-align: center">
+          <button class="back-top" onclick="scrollTo('#home')">
+            Back to Top
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              style="transform: translateY(-2px)"
+            >
+              <path
+                d="M5 12h14M12 5l7 7-7 7"
+                stroke="currentColor"
+                stroke-width="1.4"
+                fill="none"
+              />
+            </svg>
+          </button>
+
+          <footer>
+            <p>© 2025 Creative Developer. Crafted with code & curiosity.</p>
+          </footer>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      // nav: change style on scroll
+      const nav = document.getElementById("nav");
+      window.addEventListener("scroll", () => {
+        if (window.scrollY > 50) nav.classList.add("scrolled");
+        else nav.classList.remove("scrolled");
+      });
+
+      // mobile menu toggle
+      function toggleMobileMenu() {
+        const el = document.getElementById("mobileMenu");
+        if (el.style.display === "none" || el.style.display === "")
+          el.style.display = "block";
+        else el.style.display = "none";
+      }
+      document
+        .getElementById("mobileBtn")
+        .addEventListener("click", toggleMobileMenu);
+
+      // scrolling helper
+      function scrollTo(sel) {
+        const el = document.querySelector(sel);
+        if (!el) return;
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      // --- IFRAME Modal Functions ---
+      const iframeModalWrap = document.getElementById("iframeModal");
+      const modalIframe = document.getElementById("modalIframe");
+      const modalIframeTitle = document.getElementById("modalIframeTitle");
+
+      function openIframeModal(title, source) {
+        modalIframeTitle.textContent = title;
+        modalIframe.src = source;
+        iframeModalWrap.style.display = "flex";
+      }
+
+      function closeIframeModal() {
+        iframeModalWrap.style.display = "none";
+        modalIframe.src = ""; // Clear source when closing
+      }
+
+      // keyboard escape closes
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          closeIframeModal();
+          document.getElementById("mobileMenu").style.display = "none";
+        }
+      });
+
+      // simple in-view animations (fade-up) — progressive reveal
+      const revealEls = document.querySelectorAll("section, .project");
+      function checkReveal() {
+        revealEls.forEach((el) => {
+          const r = el.getBoundingClientRect();
+          if (r.top < window.innerHeight - 100) {
+            el.style.opacity = 1;
+            el.style.transform = "translateY(0)";
+            el.style.transition = "opacity .6s ease, transform .6s ease";
+          } else {
+            el.style.opacity = 0;
+            el.style.transform = "translateY(30px)";
+          }
+        });
+      }
+      window.addEventListener("load", checkReveal);
+      window.addEventListener("scroll", checkReveal);
+      checkReveal();
+    </script>
+  </body>
+</html>
